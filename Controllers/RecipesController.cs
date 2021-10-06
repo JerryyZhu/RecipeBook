@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.Data;
+using RecipeBook.Helper;
 using recipes.Models;
 using System;
 using System.Collections.Generic;
@@ -12,23 +14,35 @@ namespace RecipeBook.Controllers
     [ApiController]
     public class RecipesController : ControllerBase
     {
-        
-        public RecipesController()
+        private IRecipesService _recipeDbContext;
+        public RecipesController(IRecipesService recipesService)
         {
-            
+            _recipeDbContext = recipesService;
         }
 
         // GET: api/<RecipesController>
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok(_recipeDbContext.GetItemsAsync("SELECT * FROM c"));
         }
 
         // POST api/<RecipesController>
         [HttpPost]
-        public IActionResult Post([FromForm] Recipe recipeObj)
+        public IActionResult Post([FromBody] Recipe recipeObj)
         {
+            string id = (RecipeUtils.createIdFromUri(recipeObj.uri));
+            recipeObj.id = id;
+
+            var findRecipe = _recipeDbContext.GetItemAsync(id);
+
+            if (findRecipe != null)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, "Item already exists");
+            }
+
+            _recipeDbContext.AddItemAsync(recipeObj);
+
             return StatusCode(StatusCodes.Status201Created);
         }
 
