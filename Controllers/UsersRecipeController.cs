@@ -9,7 +9,7 @@ namespace RecipeBook.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class UsersRecipeController : ControllerBase
     {
     }
 }
