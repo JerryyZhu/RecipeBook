@@ -22,26 +22,27 @@ namespace RecipeBook.Controllers
 
         // GET: api/<RecipesController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(_recipeDbContext.GetItemsAsync("SELECT * FROM c"));
+            var items = await _recipeDbContext.GetItemsAsync("SELECT * FROM c");
+            return Ok();
         }
 
         // POST api/<RecipesController>
         [HttpPost]
-        public IActionResult Post([FromBody] Recipe recipeObj)
+        public async Task<IActionResult> Post([FromBody] Recipe recipeObj)
         {
             string id = (RecipeUtils.createIdFromUri(recipeObj.uri));
             recipeObj.id = id;
 
-            var findRecipe = _recipeDbContext.GetItemAsync(id);
+            var findRecipe = await _recipeDbContext.GetItemAsync(id);
 
             if (findRecipe != null)
             {
                 return StatusCode(StatusCodes.Status409Conflict, "Item already exists");
             }
 
-            _recipeDbContext.AddItemAsync(recipeObj);
+            await _recipeDbContext.AddItemAsync(recipeObj);
 
             return StatusCode(StatusCodes.Status201Created);
         }
