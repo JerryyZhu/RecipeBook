@@ -4,7 +4,9 @@
 Using Edamame Recipe Search API to search for recipes and allow users to save their favourite recipes
 
 Features:
-- User Authentication and Tokens
-- Authorization
-- CosmosDB
-- CRUD for Recipe Management
+- User Authentication and Tokens (WIP)
+- Authorization (WIP)
+- CosmosDB (Complete)
+- CRUD for Recipes (Complete)
+- Data Model (Complete)
+- User Recipe Management (WIP)
